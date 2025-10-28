@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import './liveMap.css'; // optional small tweaks (e.g. .lf-custom-divicon)
+import './liveMap.css'; 
 
 function createCircleIcon(color = '#007bff', size = 28) {
   const svg = `
