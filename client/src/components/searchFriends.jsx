@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import api from "../services/api"; // your axios instance
+import api from "../services/api"; 
 
 export default function SearchFriends() {
   const [q, setQ] = useState("");
@@ -9,7 +9,7 @@ export default function SearchFriends() {
 
   const debounceRef = useRef(null);
 
-  // Ensure API has token from localStorage (or you can pass token prop and set it)
+  // Ensure API has token from localStorage 
   useEffect(() => {
     const t = localStorage.getItem("token");
     if (t) api.setToken(t);
@@ -42,11 +42,10 @@ export default function SearchFriends() {
     if (Array.isArray(res.data)) return res.data;
     if (Array.isArray(res.data?.users)) return res.data.users;
     if (Array.isArray(res.data?.data)) return res.data.data;
-    // fallback: maybe res.data is an object with items
     return [];
   };
 
-  // Search users (debounced) — keeps UI same
+  // Search users
   useEffect(() => {
     if (debounceRef.current) clearTimeout(debounceRef.current);
 
@@ -62,7 +61,7 @@ export default function SearchFriends() {
       try {
         // use axios params so server receives q properly and headers are preserved
         const res = await api.get("/users/search", { params: { q: term } });
-        console.log("search response raw:", res); // debug: inspect in DevTools
+        console.log("search response raw:", res); 
         const users = extractUsers(res);
         setResults(users);
       } catch (err) {

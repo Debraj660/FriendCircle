@@ -106,12 +106,12 @@ export default function LiveMap({ locations = {}, myId = null }) {
       }
     });
 
-    // Optional: fit bounds to markers (commented out by default)
-    // const allCoords = Object.values(locations).map(p => [p.lat, p.lng]);
-    // if (allCoords.length > 0) {
-    //   const bounds = L.latLngBounds(allCoords);
-    //   map.fitBounds(bounds.pad(0.2), { maxZoom: 16, animate: true });
-    // }
+    // Optional: fit bounds to markers 
+    const allCoords = Object.values(locations).map(p => [p.lat, p.lng]);
+    if (allCoords.length > 0) {
+      const bounds = L.latLngBounds(allCoords);
+      map.fitBounds(bounds.pad(0.2), { maxZoom: 16, animate: true });
+    }
 
   }, [locations, myId]);
 

@@ -5,17 +5,6 @@ import { initSocket, emitLocation, subscribeToLocation } from '../services/socke
 import useGeolocation from '../hooks/useGeolocation';
 import SearchFriends from '../components/searchFriends';
 
-// Temporary LiveMap placeholder - remove when using real import
-// const LiveMap = ({ locations, myId }) => (
-//   <div className="w-full h-full bg-slate-100 flex items-center justify-center">
-//     <div className="text-center p-6">
-//       <p className="text-slate-600 mb-2">Leaflet Map Component</p>
-//       <p className="text-sm text-slate-500">Import your LiveMap component to see the actual map</p>
-//       <p className="text-xs text-slate-400 mt-2">Tracking {Object.keys(locations).length} location(s)</p>
-//     </div>
-//   </div>
-// );
-
 function decodeJwtPayload(token) {
   try {
     const parts = token.split('.');
@@ -60,21 +49,20 @@ export default function MapPage(props) {
   const refreshFriends = useCallback(async () => {
     try {
       setLoadingFriends(true);
-      const response = await fetch('/api/users/me/friends', {
+      const response = await api.get('/users/me/friends', {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
         }
       });
-      
-      if (!response.ok) {
+      const data = response.data;
+      if (!data.success) {
         throw new Error('Failed to fetch friends');
       }
       
-      const data = await response.json();
-      setFriends(data || []);
+      setFriends(data.friends || []);
     } catch (err) {
-      console.error('refreshFriends error', err);
+      console.log('refreshFriends error', err);
     } finally {
       setLoadingFriends(false);
     }
@@ -83,20 +71,21 @@ export default function MapPage(props) {
   const refreshFriendLocations = useCallback(async () => {
     try {
       setLoadingLocations(true);
-      const response = await fetch('/api/users/me/friends/locations', {
+      const response = await api.get('/users/me/friends/locations', {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
         }
       });
-      
-      if (!response.ok) {
+      // console.log(response.data);
+      const data = response.data;
+      // console.log(data);
+      if (!data.success) {
         throw new Error('Failed to fetch locations');
       }
       
-      const data = await response.json();
       const map = {};
-      (data || []).forEach((l) => {
+      (data.locs || []).forEach((l) => {
         const uid = l.user?._id || l.user?.id || (l.user && String(l.user));
         if (!uid) return;
         map[uid] = {
@@ -111,7 +100,7 @@ export default function MapPage(props) {
       });
       setLocations((prev) => ({ ...prev, ...map }));
     } catch (err) {
-      console.error('refreshFriendLocations error', err);
+      console.log('refreshFriendLocations error', err);
     } finally {
       setLoadingLocations(false);
     }
@@ -123,8 +112,6 @@ export default function MapPage(props) {
     refreshFriends();
     refreshFriendLocations();
 
-    // Initialize socket and subscribe to location updates
-    // Uncomment when socket service is available:
     initSocket(token);
     subscribeToLocation((payload) => {
       console.log('socket location_update', payload);
@@ -133,7 +120,6 @@ export default function MapPage(props) {
     });
   }, [token, refreshFriends, refreshFriendLocations]);
 
-  // Geolocation hook - uncomment when useGeolocation is available:
   useGeolocation((pos) => {
     if (!pos || !pos.coords) return;
     const data = {

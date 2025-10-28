@@ -48,7 +48,7 @@ exports.addFriend = async (req, res) => {
 exports.getMyFriends = async (req, res) => {
   try {
     const me = await User.findById(req.userId).populate('friends', 'username name');
-    res.json(me.friends);
+    res.status(200).json({success: true,friends: me.friends});
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'server error' });
@@ -58,9 +58,10 @@ exports.getMyFriends = async (req, res) => {
 exports.getFriendsLocations = async (req, res) => {
   try {
     const me = await User.findById(req.userId).select('friends');
+    console.log(me);
     const friendIds = me.friends || [];
     const locs = await Location.find({ user: { $in: friendIds } }).populate('user', 'username name');
-    res.json(locs);
+    res.status(200).json({success: true, locs : locs});
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'server error' });

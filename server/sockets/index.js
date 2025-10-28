@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/userModel.js');
 const Location = require('../models/locationModel.js');
 
-const JWT_SECRET = process.env.JWT_SECRET || 'dsfahfjilh';
+const JWT_SECRET = process.env.JWT_SECRET || 'Debraj';
 
 const online = new Map();
 
