@@ -1,0 +1,10 @@
+/* client/src/components/liveMap.css */
+.lf-custom-divicon {
+  /* remove pointer-events on the svg wrapper so clicks hit the marker */
+  display: inline-block;
+  pointer-events: none;
+}
+.lf-custom-divicon svg {
+  display: block;
+  pointer-events: auto; /* allow popup open on icon */
+}
