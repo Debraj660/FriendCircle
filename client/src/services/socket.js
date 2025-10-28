@@ -3,7 +3,7 @@ import { io } from 'socket.io-client';
 let socket = null;
 
 export function initSocket(token) {
-  socket = io('http://localhost:4000', { auth: { token } });
+  socket = io('https://friendcircle-server.onrender.com', { auth: { token } });
   socket.on('connect', () => console.log('socket connected', socket.id));
   socket.on('connect_error', (err) => console.error('socket error', err.message || err));
 }
