@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE = 'http://localhost:4000/api';
+const API_BASE = 'https://friendcircle-server.onrender.com/api';
 const instance = axios.create({ baseURL: API_BASE });
 
 function setToken(token) {
